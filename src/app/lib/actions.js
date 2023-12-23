@@ -6,7 +6,6 @@ import { sql } from '@vercel/postgres';
 // const UpdateInvoice = FormSchema.omit({ id: true, checked: true });
 export async function updateTodo(id, formData) {
     const completed = formData.get("checked") === "on" ? true : false
-    console.log({ checked: completed, id })
     try {
         await sql`
             UPDATE todos

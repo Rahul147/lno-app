@@ -1,79 +1,62 @@
+// import { Home2 } from "@/app/TodoMain"
 import { fetchCurrentWeekTodos } from '@/app/lib/data'
 import { TodoCard } from '@/app/ui/todo-card'
+import { getWeekOfYear } from '@/app/lib/utility'
+import Link from 'next/link'
+import { Home2 } from './TodoMain'
+import { TodoCardSkeleton } from '@/app/ui/todo-card-skeleton'
+import { Suspense } from 'react'
 
-function getWeekOfYear(date) {
-  const target = new Date(date.valueOf());
-  const dayNr = (date.getDay() + 6) % 7;
-  target.setDate(target.getDate() - dayNr + 3);
-  // Start of ISO week year is the first Thursday
-  const firstThursday = target.valueOf();
-  target.setMonth(0, 1);
-  if (target.getDay() !== 4) {
-    target.setMonth(0, 1 + ((4 - target.getDay()) + 7) % 7);
-  }
-  return 1 + Math.ceil((firstThursday - target) / (7 * 24 * 60 * 60 * 1000));
-}
 
-function computeCompletionRation(l, n, o) {
-  const computeCompleted = (items) => items.reduce((accumulator, current) => {
+function computeCompletionRation(l = [], n = [], o = []) {
+  const computeCompleted = (items) => items?.reduce((accumulator, current) => {
     return accumulator += current.completed ? 1 : 0
-  }, 0)
+  }, 0) || 0
   return [
     Math.round((computeCompleted(l) / l.length) * 100),
     Math.round((computeCompleted(n) / n.length) * 100),
     Math.round((computeCompleted(o) / o.length) * 100)
-  ];
+  ]
 }
 
-export default async function Home() {
-  const {
-    leverage: l,
-    neutral: n,
-    overhead: o
-  } = await fetchCurrentWeekTodos()
-  const [lCompletion, nCompletion, oCompletion] = computeCompletionRation(l, n, o)
+export default async function Page({ searchParams }) {
+  const wDateQuery = Number(searchParams.wdate, 10)
+  // const {
+  //   leverage: l = [],
+  //   neutral: n = [],
+  //   overhead: o = []
+  // } = await fetchCurrentWeekTodos(wDateQuery ?? getWeekOfYear(new Date()))
+  // const [lCompletion, nCompletion, oCompletion] = computeCompletionRation(l, n, o)
 
-  return <div className="min-h-screen flex items-center justify-center">
-    <div className="md:w-1/2 lg:w-1/3">
-      <div className="card">
+  // const dataPresent = (l.length > 0 && n.length > 0 && o.length > 0)
 
-        {/* Card header */}
-        <div className="card-title text-center justify-between pr-9 pl-9">
-          {/* Left pagination */}
-          <button className="butto"><kbd className="kbd bg-amber-200">◀︎</kbd></button>
-          <kbd className="kbd bg-amber-200">{getWeekOfYear(new Date())} / 52</kbd>
-          {/* Right pagination */}
-          <button className="button" disabled><kbd className="kbd">▶︎</kbd></button>
-        </div>
-
-        {/* Card body */}
-        <div className="card-body">
-
-          {/* L */}
-          <TodoCard
-            title={"Leverage"}
-            items={l}
-            completion={lCompletion}
-          />
-
-          {/* N */}
-          <TodoCard
-            title={"Neutral"}
-            items={n}
-            completion={nCompletion}
-          />
-
-          {/* O */}
-          {/* N */}
-          <TodoCard
-            title={"Overhead"}
-            items={o}
-            completion={oCompletion}
-          />
-
-        </div>
-
-      </div>
+  return <main>
+    <div className="navbar bg-amber-300 text-black">
+      <button className="btn btn-ghost text-xl font-black underline">LNO</button>
     </div>
-  </div>
+    <div className="min-h-screen flex mt-20 justify-center">
+
+      <div className="md:w-1/2 lg:w-1/3">
+        <div className="card">
+
+          {/* Card header */}
+          <div className="card-title text-center justify-between pr-9 pl-9">
+            {/* Left pagination */}
+            <Link className="button" href={`/?wdate=${wDateQuery - 1}`} prefetch={true}><kbd className="kbd bg-amber-200">◀︎</kbd></Link>
+            <kbd className="kbd bg-amber-200">{String(wDateQuery).replace('2023', '')} / 52</kbd>
+            {/* Right pagination */}
+            <Link className="button" href={`/?wdate=${wDateQuery + 1}`} prefetch={true}> <kbd className="kbd">▶︎</kbd></Link>
+          </div>
+
+          {/* Card body */}
+          <div>
+            <Suspense fallback={<TodoCardSkeleton />}>
+              <Home2 searchParams={searchParams} />
+            </Suspense>
+          </div>
+
+        </div>
+      </div>
+    </div >
+  </main>
 }
