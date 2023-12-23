@@ -13,7 +13,7 @@ function computeCompletionRation(l = [], n = [], o = []) {
   ]
 }
 
-export async function Home2({ searchParams }) {
+export async function TodoCardContainer({ searchParams }) {
   const wDateQuery = searchParams.wdate
   const {
     leverage: l = [],
@@ -21,10 +21,16 @@ export async function Home2({ searchParams }) {
     overhead: o = []
   } = await fetchCurrentWeekTodos(wDateQuery ?? getWeekOfYear(new Date()))
   const [lCompletion, nCompletion, oCompletion] = computeCompletionRation(l, n, o)
+  const totalPercentageWorkDone = Math.ceil((lCompletion + nCompletion + oCompletion) / 3 || 0)
   // const dataPresent = (l.length > 0 && n.length > 0 && o.length > 0)
 
   return <>
     <div className="card-body">
+      <div className='flex justify-center'>
+        <progress className="progress progress-warning mt-2 mr-2" value={totalPercentageWorkDone} max="100" />
+        <div className='font-black'>{totalPercentageWorkDone}%</div>
+      </div>
+
 
       {/* L */}
       <TodoCard
