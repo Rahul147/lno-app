@@ -1,34 +1,36 @@
-function GenerateCheckLists({ items }) {
-  return <>
-    {items
-      .map((item) => {
-        const { title, completed, id } = item
-        return <div className="flex items-center mb-3" key={id}>
-          <input type="checkbox" id={id} className="checkbox" />
-          <label className="ml-2 text-sm">{title}</label>
-        </div>
-      })
-    }
-  </>
-}
+"use client"
+import { updateTodo } from "@/app/lib/actions"
+import React, { useRef } from 'react';
 
-function computeCompletionRation(l, n, o) {
-  console.log({ l, n, o })
-  const computeCompleted = (items) => items.reduce((accumulator, current) => {
-    return accumulator += current.completed ? 1 : 0
-  }, 0)
-  return [
-    Math.round((computeCompleted(l) / l.length) * 100),
-    Math.round((computeCompleted(n) / n.length) * 100),
-    Math.round((computeCompleted(o) / o.length) * 100)
-  ];
-}
+function GenerateCheckList(item) {
+  const formRef = useRef(null)
 
+  const { title, completed, id } = item
+  const updateTodoWithId = updateTodo.bind(null, id)
+
+  return <div key={id}>
+    <form ref={formRef} action={updateTodoWithId}>
+      <div className="flex items-center mb-3" >
+        <button type="submit">
+          <input
+            name="checked"
+            type="checkbox"
+            id={id}
+            className="checkbox"
+            defaultChecked={completed}
+            onClick={() => formRef.current && formRef.current.requestSubmit()}
+          />
+        </button>
+        <label className="ml-2 text-sm">{title}</label>
+      </div>
+    </form>
+  </div>
+}
 
 export function TodoCard({ title, items, completion }) {
   return <>
     <div className="collapse collapse-arrow mb-3 border-grey-100 border" >
-      <input type="radio" name="my-accordion-3" />
+      <input type="radio" name="my-accordion-3" defaultChecked={title === "Leverage"} />
       <div className="collapse-title text-lg font-medium flex justify-between">
         <div><span className="text-xl text-amber-400 font-bold capitalize">{title[0]}</span> {title.substring(1)}</div>
         <div className="mr-3">
@@ -41,7 +43,7 @@ export function TodoCard({ title, items, completion }) {
         </div>
       </div>
       <div className="collapse-content">
-        <GenerateCheckLists items={items} />
+        {items.map(GenerateCheckList)}
       </div>
     </div >
   </>

@@ -17,7 +17,7 @@ function getWeekOfYear(date) {
 export async function fetchTodos() {
     // Add noStore() here prevent the response from being cached.
     // This is equivalent to in fetch(..., {cache: 'no-store'}).
-    noStore()
+    // noStore()
 
     try {
         const data = await sql`SELECT * FROM todos 
@@ -33,7 +33,7 @@ export async function fetchTodos() {
 export async function fetchCurrentWeekTodos(weekId = getWeekOfYear(new Date())) {
     // Add noStore() here prevent the response from being cached.
     // This is equivalent to in fetch(..., {cache: 'no-store'}).
-    noStore()
+    // noStore()
 
     try {
         const data = await sql`SELECT * FROM todos 

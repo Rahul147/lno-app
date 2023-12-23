@@ -1,14 +1,6 @@
 import { fetchCurrentWeekTodos } from '@/app/lib/data'
 import { TodoCard } from '@/app/ui/todo-card'
 
-function createFakeLNOData() {
-  return {
-    "l": [{ "title": "Review MR + Create RCA", "completed": true }, { "title": "DEXTER next steps", "completed": false }],
-    "n": [{ "title": "Some title", "completed": false }],
-    "o": [{ "title": "Some new title", "completed": false }]
-  }
-}
-
 function getWeekOfYear(date) {
   const target = new Date(date.valueOf());
   const dayNr = (date.getDay() + 6) % 7;
@@ -22,22 +14,7 @@ function getWeekOfYear(date) {
   return 1 + Math.ceil((firstThursday - target) / (7 * 24 * 60 * 60 * 1000));
 }
 
-function GenerateCheckLists({ items }) {
-  return <>
-    {items
-      .map((item) => {
-        const { title, completed, id } = item
-        return <div className="flex items-center mb-3" key={id}>
-          <input type="checkbox" id={id} className="checkbox" />
-          <label className="ml-2 text-sm">{title}</label>
-        </div>
-      })
-    }
-  </>
-}
-
 function computeCompletionRation(l, n, o) {
-  console.log({ l, n, o })
   const computeCompleted = (items) => items.reduce((accumulator, current) => {
     return accumulator += current.completed ? 1 : 0
   }, 0)
