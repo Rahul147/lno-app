@@ -1,3 +1,6 @@
+import { fetchCurrentWeekTodos } from '@/app/lib/data'
+import { TodoCard } from '@/app/ui/todo-card'
+
 function createFakeLNOData() {
   return {
     "l": [{ "title": "Review MR + Create RCA", "completed": true }, { "title": "DEXTER next steps", "completed": false }],
@@ -23,9 +26,9 @@ function GenerateCheckLists({ items }) {
   return <>
     {items
       .map((item) => {
-        const { title, completed } = item
-        return <div className="flex items-center mb-3" key={title}>
-          <input type="checkbox" id={title} className="checkbox" />
+        const { title, completed, id } = item
+        return <div className="flex items-center mb-3" key={id}>
+          <input type="checkbox" id={id} className="checkbox" />
           <label className="ml-2 text-sm">{title}</label>
         </div>
       })
@@ -34,6 +37,7 @@ function GenerateCheckLists({ items }) {
 }
 
 function computeCompletionRation(l, n, o) {
+  console.log({ l, n, o })
   const computeCompleted = (items) => items.reduce((accumulator, current) => {
     return accumulator += current.completed ? 1 : 0
   }, 0)
@@ -44,8 +48,12 @@ function computeCompletionRation(l, n, o) {
   ];
 }
 
-export default function Home() {
-  const { l, n, o } = createFakeLNOData()
+export default async function Home() {
+  const {
+    leverage: l,
+    neutral: n,
+    overhead: o
+  } = await fetchCurrentWeekTodos()
   const [lCompletion, nCompletion, oCompletion] = computeCompletionRation(l, n, o)
 
   return <div className="min-h-screen flex items-center justify-center">
@@ -65,65 +73,30 @@ export default function Home() {
         <div className="card-body">
 
           {/* L */}
-          <div className="collapse collapse-arrow mb-3 border-grey-100 border">
-            <input type="radio" name="my-accordion-3" defaultChecked="checked" />
-            <div className="collapse-title text-lg font-medium flex justify-between">
-              <div><span className="text-xl text-amber-400 font-bold capitalize">L</span> everage</div>
-              <div className="mr-3">
-                <div
-                  className="radial-progress text-xs text-amber-700 border-1"
-                  style={{ "--value": lCompletion, "--size": "1.8rem" }}
-                  role="progressbar">
-                  {lCompletion || ""}
-                </div>
-              </div>
-            </div>
-            <div className="collapse-content">
-              <GenerateCheckLists items={l} />
-            </div>
-          </div>
+          <TodoCard
+            title={"Leverage"}
+            items={l}
+            completion={lCompletion}
+          />
 
           {/* N */}
-          <div className="collapse collapse-arrow mb-3 border-grey-100 border" >
-            <input type="radio" name="my-accordion-3" />
-            <div className="collapse-title text-lg font-medium flex justify-between">
-              <div><span className="text-xl text-amber-400 font-bold capitalize">N</span> eutral</div>
-              <div className="mr-3">
-                <div
-                  className="radial-progress text-xs bg-white border-4"
-                  style={{ "--value": nCompletion, "--size": "0rem" }}
-                  role="progressbar">
-                  {nCompletion || ""}
-                </div>
-              </div>
-            </div>
-            <div className="collapse-content">
-              <GenerateCheckLists items={n} />
-            </div>
-          </div>
+          <TodoCard
+            title={"Neutral"}
+            items={n}
+            completion={nCompletion}
+          />
 
           {/* O */}
-          <div className="collapse collapse-arrow mb-3 border-grey-100 border">
-            <input type="radio" name="my-accordion-3" />
-            <div className="collapse-title text-lg font-medium flex justify-between">
-              <div><span className="text-xl text-amber-400 font-bold capitalize">O</span> verhead</div>
-              <div className="mr-3">
-                <div
-                  className="radial-progress text-xs bg-white border-4"
-                  style={{ "--value": nCompletion, "--size": "0rem" }}
-                  role="progressbar">
-                  {oCompletion || ""}
-                </div>
-              </div>
-            </div>
-            <div className="collapse-content">
-              <GenerateCheckLists items={o} />
-            </div>
-          </div>
+          {/* N */}
+          <TodoCard
+            title={"Overhead"}
+            items={o}
+            completion={oCompletion}
+          />
 
         </div>
-      </div>
 
+      </div>
     </div>
   </div>
 }
