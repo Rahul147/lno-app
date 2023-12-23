@@ -19,7 +19,7 @@ export async function updateTodo(id, formData) {
 
 export async function createTodo(formData) {
     const todo = {
-        week_id: 202351,
+        week_id: formData.get("wDate"),
         title: formData.get("title"),
         category: formData.get("category"),
         created_date: new Date(),
@@ -39,6 +39,6 @@ export async function createTodo(formData) {
     } catch (error) {
         return { message: "Database Error: Failed to Update Invoice." }
     }
-    revalidatePath("/?wdate=202351")
-    redirect("/?wdate=202351")
+    revalidatePath(`/?wdate=${todo.week_id}`);
+    redirect(`/?wdate=${todo.week_id}`);
 }

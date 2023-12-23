@@ -1,9 +1,11 @@
 "use client"
 import React, { useRef } from 'react'
 import { createTodo } from "@/app/lib/actions"
+import { useSearchParams } from 'next/navigation'
 
 export function AddTodoModal() {
   const formRef = useRef(null)
+  const wDate = useSearchParams().get('wdate')
 
   return <>
     <dialog id="my_modal_1" className="modal">
@@ -18,6 +20,7 @@ export function AddTodoModal() {
               <option value={"overhead"}>O</option>
             </select>
             <input type="text" placeholder="Type here" className="input input-bordered input-warning w-full" name="title" />
+            <input name="wDate" defaultValue={wDate} hidden />
 
             <button className="btn" type="submit" onClick={() => formRef.current && formRef.current.requestSubmit()}>Add</button>
           </div>
