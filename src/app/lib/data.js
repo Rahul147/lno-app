@@ -21,8 +21,8 @@ export async function fetchTodos() {
 export async function fetchCurrentWeekTodos(weekId = getWeekOfYear(new Date())) {
     // Add noStore() here prevent the response from being cached.
     // This is equivalent to in fetch(..., {cache: 'no-store'}).
-    // noStore()
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    noStore()
+    // await new Promise((resolve) => setTimeout(resolve, 1500));
 
     try {
         const data = await sql`SELECT * FROM todos 

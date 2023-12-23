@@ -21,7 +21,7 @@ function GenerateCheckList(item) {
             onClick={() => formRef.current && formRef.current.requestSubmit()}
           />
         </button>
-        <label className="ml-2 text-sm">{title}</label>
+        <label className="ml-2 text-sm mb-1.5">{title}</label>
       </div>
     </form>
   </div>
