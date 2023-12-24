@@ -34,7 +34,6 @@ export async function PUT(request) {
 
 export async function POST(request) {
   try {
-    // console.log(await request.json())
     const {
       wDate,
       createdDate,

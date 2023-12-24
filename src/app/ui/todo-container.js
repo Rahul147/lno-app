@@ -7,25 +7,24 @@ import { AddTodoModal } from "./add-todo-modal"
 function computeCompletionRation(l = [], n = [], o = []) {
   const computeCompleted = (items) => items?.reduce((accumulator, current) => {
     return accumulator += current.completed ? 1 : 0
-  }, 0) || 0
+  }, 0)
   return [
-    Math.round((computeCompleted(l) / l.length) * 100),
-    Math.round((computeCompleted(n) / n.length) * 100),
-    Math.round((computeCompleted(o) / o.length) * 100)
+    Math.round((computeCompleted(l) / (l.length || 1)) * 100),
+    Math.round((computeCompleted(n) / (n.length || 1)) * 100),
+    Math.round((computeCompleted(o) / (o.length || 1)) * 100)
   ]
 }
 
 export async function TodoCardContainer({ searchParams }) {
-  const wDateQuery = searchParams.wdate
+  const wDateQuery = searchParams.wdate ?? getWeekOfYear(new Date())
   const {
     leverage: l = [],
     neutral: n = [],
     overhead: o = []
-  } = await fetchCurrentWeekTodos(wDateQuery ?? getWeekOfYear(new Date()))
+  } = await fetchCurrentWeekTodos(wDateQuery)
   const [lCompletion, nCompletion, oCompletion] = computeCompletionRation(l, n, o)
   const totalPercentageWorkDone = Math.ceil((lCompletion + nCompletion + oCompletion) / 3 || 0)
   // const dataPresent = (l.length > 0 && n.length > 0 && o.length > 0)
-
   return <>
     <AddTodoModal />
 
