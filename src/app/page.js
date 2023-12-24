@@ -2,9 +2,12 @@ import Link from 'next/link'
 import { TodoCardContainer } from './ui/todo-container'
 import { TodoCardSkeleton } from '@/app/ui/todo-card-skeleton'
 import { Suspense } from 'react'
+import { getWeekOfYear } from "@/app/lib/utility"
 
 export default async function Page({ searchParams }) {
-  const wDateQuery = Number(searchParams.wdate, 10)
+  const wDateQuery = searchParams.wdate
+    ? Number(searchParams.wdate, 10)
+    : getWeekOfYear(new Date())
 
   return <>
     <main>
