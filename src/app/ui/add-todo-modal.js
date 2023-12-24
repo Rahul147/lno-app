@@ -1,30 +1,31 @@
 "use client"
-import React, { useState } from 'react'
-import { useSearchParams } from 'next/navigation'
+import React, { useState } from "react"
+import { useSearchParams } from "next/navigation"
+import { getWeekOfYear } from "@/app/lib/utility"
 
 export function AddTodoModal() {
-  const wDate = useSearchParams().get('wdate')
+  const wDate = useSearchParams().get("wdate") ?? getWeekOfYear(new Date())
   const [todo, setTodo] = useState({
     createdDate: new Date(),
     completed: false,
     wDate,
-    title: '',
-    category: 'leverage'
+    title: "",
+    category: "leverage"
   })
 
   const updateTodoWithIdNew = async () => {
     try {
-      const response = await fetch('/api/todo', {
-        method: 'POST',
+      const response = await fetch("/api/todo", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(todo),
       })
       const data = await response.json()
       window.location.reload()
     } catch (error) {
-      console.error('Failed to update todo', error)
+      console.error("Failed to update todo", error)
     }
   }
 
@@ -57,7 +58,7 @@ export function AddTodoModal() {
             onChange={(value) => updateTodo(value)}
           />
 
-          <button className="btn" onClick={updateTodoWithIdNew} disabled={(todo.title == '') || (todo.category == '')}>Add</button>
+          <button className="btn" onClick={updateTodoWithIdNew} disabled={(todo.title == "") || (todo.category == "")}>Add</button>
         </div>
 
       </div >

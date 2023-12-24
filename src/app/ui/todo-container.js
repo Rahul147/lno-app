@@ -1,8 +1,8 @@
-import { fetchCurrentWeekTodos } from '@/app/lib/data'
-import { TodoCard } from '@/app/ui/todo-card'
-import { getWeekOfYear } from '@/app/lib/utility'
+import { fetchCurrentWeekTodos } from "@/app/lib/data"
+import { TodoCard } from "@/app/ui/todo-card"
+import { getWeekOfYear } from "@/app/lib/utility"
 import { AddTodoButton } from "@/app/ui/new-button"
-import { AddTodoModal } from './add-todo-modal'
+import { AddTodoModal } from "./add-todo-modal"
 
 function computeCompletionRation(l = [], n = [], o = []) {
   const computeCompleted = (items) => items?.reduce((accumulator, current) => {
@@ -30,9 +30,9 @@ export async function TodoCardContainer({ searchParams }) {
     <AddTodoModal />
 
     <div className="card-body">
-      <div className='flex justify-center'>
+      <div className="flex justify-center">
         <progress className="progress progress-warning mt-2 mr-2" value={totalPercentageWorkDone} max="100" />
-        <div className='font-black'>{totalPercentageWorkDone}%</div>
+        <div className="font-black">{totalPercentageWorkDone}%</div>
       </div>
 
 

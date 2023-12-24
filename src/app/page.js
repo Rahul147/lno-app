@@ -1,7 +1,7 @@
-import Link from 'next/link'
-import { TodoCardContainer } from './ui/todo-container'
-import { TodoCardSkeleton } from '@/app/ui/todo-card-skeleton'
-import { Suspense } from 'react'
+import Link from "next/link"
+import { TodoCardContainer } from "./ui/todo-container"
+import { TodoCardSkeleton } from "@/app/ui/todo-card-skeleton"
+import { Suspense } from "react"
 import { getWeekOfYear } from "@/app/lib/utility"
 
 export default async function Page({ searchParams }) {
@@ -23,7 +23,7 @@ export default async function Page({ searchParams }) {
             <div className="card-title text-center justify-between pr-9 pl-9">
               {/* Left pagination */}
               <Link className="button" href={`/?wdate=${wDateQuery - 1}`} prefetch={true}><kbd className="kbd bg-amber-200">◀︎</kbd></Link>
-              <kbd className="kbd bg-amber-200">{String(wDateQuery).replace('2023', '')} / 52</kbd>
+              <kbd className="kbd bg-amber-200">{String(wDateQuery).replace("2023", "")} / 52</kbd>
               {/* Right pagination */}
               <Link className="button" href={`/?wdate=${wDateQuery + 1}`} prefetch={true}><kbd className="kbd  bg-amber-200">▶︎</kbd></Link>
             </div>
