@@ -14,7 +14,7 @@ export default async function Page({ searchParams }) {
       <div className="navbar bg-amber-300 text-black">
         <button className="btn btn-ghost text-xl font-black">LNO</button>
       </div>
-      <div className="min-h-screen flex mt-20 justify-center">
+      <div className="flex mt-20 justify-center">
 
         <div className="md:w-1/2 lg:w-1/3">
           <div className="card shadow-xl">
