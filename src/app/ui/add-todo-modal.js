@@ -4,7 +4,7 @@ import { useSearchParams } from 'next/navigation'
 
 export function AddTodoModal() {
   const wDate = useSearchParams().get('wdate')
-  const [todo, useTodo] = useState({
+  const [todo, setTodo] = useState({
     createdDate: new Date(),
     completed: false,
     wDate,
@@ -28,8 +28,8 @@ export function AddTodoModal() {
     }
   }
 
-  const updateTodo = function (e) {
-    useTodo({ ...todo, [e.target.name]: e.target.value })
+  const updateTodo = (e) => {
+    setTodo({ ...todo, [e.target.name]: e.target.value })
   }
 
   return <>
