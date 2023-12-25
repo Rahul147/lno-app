@@ -3,17 +3,21 @@ import { TodoCardContainer } from "./ui/todo-container"
 import { TodoCardSkeleton } from "@/app/ui/todo-card-skeleton"
 import { Suspense } from "react"
 import { getWeekOfYear } from "@/app/lib/utility"
+import { getUserSession } from "@/app/lib/session"
+import NavBar from "@/app/ui/navbar"
 
 export default async function Page({ searchParams }) {
+  const user = await getUserSession()
   const wDateQuery = searchParams.wdate
     ? Number(searchParams.wdate, 10)
     : getWeekOfYear(new Date())
 
   return <>
     <main>
-      <div className="navbar bg-amber-300 text-black">
-        <button className="btn btn-ghost text-xl font-black">LNO</button>
-      </div>
+
+      {/* Navbar */}
+      <NavBar />
+
       <div className="flex mt-20 justify-center">
 
         <div className="md:w-1/2 lg:w-1/3">
