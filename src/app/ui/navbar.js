@@ -1,4 +1,5 @@
 import { getUserSession } from "@/app/lib/session"
+import Image from 'next/image'
 
 export default async function NavBar() {
   const user = await getUserSession()
@@ -11,7 +12,7 @@ export default async function NavBar() {
       <div className="dropdown dropdown-end">
         <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
           <div className="w-10 rounded-full">
-            {user?.image ? <img alt="Tailwind CSS Navbar component" src={user?.image} /> : <></>}
+            {user?.image ? <Image alt="Tailwind CSS Navbar component" src={user?.image} width={40} height={40} /> : <></>}
           </div>
         </div>
       </div>
