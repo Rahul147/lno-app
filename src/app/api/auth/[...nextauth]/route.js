@@ -1,14 +1,14 @@
 import NextAuth from "next-auth"
-import GoogleProvider from 'next-auth/providers/google'
-import { sql } from '@vercel/postgres'
-import { session } from '@/app/lib/session'
+import GoogleProvider from "next-auth/providers/google"
+import { sql } from "@vercel/postgres"
+import { session } from "@/app/lib/session"
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET
 
 export const authOption = {
   session: {
-    strategy: 'jwt',
+    strategy: "jwt",
   },
   providers: [
     GoogleProvider({
@@ -20,7 +20,7 @@ export const authOption = {
   callbacks: {
     async signIn({ account, profile }) {
       if (!profile?.email) {
-        throw new Error('No profile')
+        throw new Error("No profile")
       }
 
       try {
@@ -38,16 +38,24 @@ export const authOption = {
       }
     },
     // session,
-    async jwt({ token, user, account, profile }) {
+    async jwt({ token, user: guser, account, profile }) {
       if (profile) {
-        await sql`
+        const dbResult = await sql`
           SELECT * from users
           WHERE email = ${profile.email}
+          fetch first 1 row only
         `;
+
+        const user = dbResult?.rows?.[0]
         if (!user) {
-          throw new Error('No user found')
+          throw new Error("user not found")
+        }
+
+        if (!user) {
+          throw new Error("user not found")
         }
         token.id = user.id
+        token.gid = guser.id
       }
       return token
     },

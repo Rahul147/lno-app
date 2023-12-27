@@ -15,6 +15,7 @@ async function seedLNOs(client) {
     const createTodoItemsTable = await client.sql`
         CREATE TABLE IF NOT EXISTS todos (
         id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+        user_id UUID NOT NULL,
         week_id INT NOT NULL,
         title VARCHAR(255) NOT NULL,
         description TEXT,
@@ -22,8 +23,9 @@ async function seedLNOs(client) {
         created_date TIMESTAMP NOT NULL,
         updated_at TIMESTAMP,
         category category_type NOT NULL,
-        completed BOOLEAN DEFAULT FALSE
-        )
+        completed BOOLEAN DEFAULT FALSE,
+        FOREIGN KEY (user_id) REFERENCES users(id)
+      )
     `
 
     console.log(`Created "todos" table`)
@@ -32,7 +34,7 @@ async function seedLNOs(client) {
     const insertedTodos = await Promise.all(
       todos.map(async (todo) => {
         return client.sql`
-          INSERT INTO todos (week_id, title, description, due_date, created_date, updated_at, category, completed)
+          INSERT INTO todos (week_id, title, description, due_date, created_date, updated_at, category, completed, user_id)
           VALUES (
             ${todo.week_id}, 
             ${todo.title}, 
@@ -41,7 +43,8 @@ async function seedLNOs(client) {
             ${todo.created_date}, 
             ${todo.updated_at}, 
             ${todo.category}, 
-            ${todo.completed}
+            ${todo.completed},
+            ${"024816ab-6e78-42a1-9f0d-7fa6d3df1cb9"}
           )
         `
       }),

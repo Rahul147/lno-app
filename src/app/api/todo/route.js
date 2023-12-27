@@ -1,6 +1,7 @@
-import { sql } from '@vercel/postgres'
+import { sql } from "@vercel/postgres"
+import { getUserSession } from "@/app/lib/session"
 
-export const dynamic = 'force-dynamic'
+export const dynamic = "force-dynamic"
 export async function GET(request) {
   return Response.json({ data: "Hello, world!" })
 }
@@ -18,10 +19,10 @@ export async function PUT(request) {
 
     try {
       await sql`
-                UPDATE todos
-                SET completed = ${completed}
-                WHERE id = ${id}
-              `
+        UPDATE todos
+        SET completed = ${completed}
+        WHERE id = ${id}
+      `
       return Response.json({ data: `${id} updated to ${completed}` }, { status: 200 })
     } catch (error) {
       return Response.json({ error: error.message }, { status: 500 })
@@ -33,6 +34,7 @@ export async function PUT(request) {
 }
 
 export async function POST(request) {
+  const { id: userId } = await getUserSession()
   try {
     const {
       wDate,
@@ -43,13 +45,14 @@ export async function POST(request) {
     } = await request.json()
 
     await sql`
-      INSERT INTO todos (week_id, title, created_date, category, completed)
+      INSERT INTO todos (week_id, title, created_date, category, completed, user_id)
       VALUES (
           ${wDate}, 
           ${title}, 
           ${createdDate}, 
           ${category}, 
-          ${completed}
+          ${completed},
+          ${userId}
       )
     `
     return Response.json({ data: `${title} inserted` }, { status: 200 })

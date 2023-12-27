@@ -3,8 +3,10 @@ import { revalidatePath, redi } from "next/cache"
 import { sql } from '@vercel/postgres'
 import { redirect } from 'next/navigation'
 import { AuthError } from 'next-auth'
+import { getUserSession } from "@/app/lib/session"
 
 export async function updateTodo(id, formData) {
+  const user = await getUserSession()
   const completed = formData.get("checked") === "on" ? true : false
   try {
     await sql`
@@ -28,15 +30,15 @@ export async function createTodo(formData) {
   }
   try {
     await sql`
-            INSERT INTO todos (week_id, title, created_date, category, completed)
-            VALUES (
-                ${todo.week_id}, 
-                ${todo.title}, 
-                ${todo.created_date}, 
-                ${todo.category}, 
-                ${todo.completed}
-            )
-        `
+        INSERT INTO todos (week_id, title, created_date, category, completed)
+        VALUES (
+            ${todo.week_id}, 
+            ${todo.title}, 
+            ${todo.created_date}, 
+            ${todo.category}, 
+            ${todo.completed}
+        )
+    `
   } catch (error) {
     return { message: "Database Error: Failed to Update Invoice." }
   }
